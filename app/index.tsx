@@ -1,30 +1,63 @@
-import { View, Text, Button, StatusBar } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 
-type Props = {}
-
-const Contador = (props: Props) => {
-    const [contador, setContador] = useState(0)
-
-    const incrementar = () => {
-        setContador(prev => prev + 1)
-    }
-
-    const decrementar = () => {
-        setContador(prev => prev - 1)
-    }
-
-    return (
-        <View>
-            {/* Ocultar la barra de estado */}
-            <StatusBar hidden={true} />
-
-            <Button title='Incrementar' onPress={incrementar} />
-            <Button title='Decrementar' onPress={decrementar} />
-            <Text>Contador: {contador}</Text>
-        </View>
-    )
+// Definir la interfaz para las props de Tarjeta
+interface TarjetaProps {
+  texto: string;
 }
 
-export default Contador
+const Tarjeta: React.FC<TarjetaProps> = ({ texto }) => {
+  const [presionado, setPresionado] = useState(false);
 
+  const cambiarColor = () => {
+    setPresionado(!presionado);
+  };
+
+  return (
+    <Pressable
+      onPress={cambiarColor}
+      style={[
+        styles.tarjeta,
+        { backgroundColor: presionado ? 'skyblue' : 'lightgray' },
+      ]}
+    >
+      <Text style={[styles.texto, { color: presionado ? 'white' : 'black' }]}>{texto}</Text>
+    </Pressable>
+  );
+};
+
+const App = () => {
+  const datos = [
+    { id: '1', texto: 'Tarjeta 1' },
+    { id: '2', texto: 'Tarjeta 2' },
+    { id: '3', texto: 'Tarjeta 3' },
+  ];
+
+  return (
+    <View style={styles.container}>
+      {datos.map(item => (
+        <Tarjeta key={item.id} texto={item.texto} />
+      ))}
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  tarjeta: {
+    padding: 20,
+    margin: 10,
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  texto: {
+    fontSize: 16,
+  },
+});
+
+export default App;
